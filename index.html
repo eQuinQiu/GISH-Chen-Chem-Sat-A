@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chen & Chang Chem Lab: Science Workshop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 主題色調：改為藍綠/薄荷色系 */
+            --primary: #006064;      /* Deep Cyan */
+            --primary-light: #00838f;
+            --secondary: #0097a7;    
+            --accent: #00bcd4;       /* Cyan Accent (取代原本的琥珀色) */
+            --bg-color: #E0F2F1;     /* 淡薄荷綠背景 (取代原本的檸檬黃) */
+            --card-bg: #ffffff;
+            --text-main: #37474f;
+            --radius: 12px;
+        }
+
+
+        body {
+            font-family: 'Roboto', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+        }
+
+
+        header {
+            background-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        /* 修改：右上角導覽列改為文字按鈕 */
+        .nav-links { 
+            display: flex; 
+            gap: 5px; 
+            overflow-x: auto; /* 避免螢幕太小按鈕跑版 */
+        }
+        
+        .nav-btn { 
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+
+        .nav-btn:hover { background-color: rgba(255,255,255,0.2); color: #fff; }
+        .nav-btn.active { background-color: rgba(255,255,255,0.3); color: #fff; font-weight: 700; }
+
+
+        main {
+            flex: 1; width: 100%; max-width: 900px; margin: 0 auto; padding: 20px;
+            box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+        }
+
+
+        .slide {
+            display: none; width: 100%; background: var(--card-bg); border-radius: var(--radius);
+            padding: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); border-top: 5px solid var(--secondary);
+            max-height: 85vh; overflow-y: auto; animation: fadeIn 0.4s ease-out;
+        }
+        .slide.active { display: block; }
+
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+
+        /* 標題與文字 */
+        h1 { font-size: 2.2rem; color: var(--primary); margin: 0 0 10px 0; font-weight: 700; }
+        h2 { font-size: 1.8rem; color: var(--primary); margin-top: 0; border-bottom: 2px solid #b2dfdb; padding-bottom: 12px; }
+        h3 { font-size: 1.25rem; color: var(--secondary); margin: 25px 0 10px 0; font-weight: 700; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--secondary); padding-left: 10px;}
+        .eng-sub { color: #78909c; font-size: 1rem; font-weight: 400; margin-bottom: 20px; display: block; letter-spacing: 0.5px; }
+        p, li { line-height: 1.8; font-size: 1.05rem; }
+        
+        /* 移除圖片後的替代樣式 */
+        .no-img-box {
+            width: 100%; margin: 20px 0; padding: 30px;
+            background: #f1f8e9; border: 2px dashed #b2dfdb; border-radius: 8px;
+            text-align: center; color: var(--primary);
+        }
+
+
+        .highlight-box { background: #e0f2f1; border-left: 5px solid var(--primary); padding: 20px; margin: 20px 0; border-radius: 4px; }
+        
+        .nav-actions { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; }
+        button { border: none; padding: 12px 28px; border-radius: 50px; font-size: 1rem; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        
+        .btn-next { background-color: var(--primary-light); color: white; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-next:hover { transform: translateY(-2px); background-color: var(--primary); }
+        
+        .btn-prev { background-color: #cfd8dc; color: #455a64; }
+        .btn-prev:hover { background-color: #b0bec5; }
+
+
+        .action-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 24px; border-radius: 50px; text-decoration: none;
+            font-weight: bold; margin-top: 10px; transition: transform 0.2s;
+            font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn-yt { background-color: #d32f2f; color: white; }
+        .btn-yt:hover { background-color: #b71c1c; transform: translateY(-2px); }
+
+
+        .btn-download { background-color: #00838f; color: white; border: 1px solid #006064; }
+        .btn-download:hover { background-color: #006064; transform: translateY(-2px); }
+
+
+        footer { text-align: center; padding: 15px; font-size: 0.85rem; color: #78909c; background: #fff; border-top: 1px solid #eee;}
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: var(--secondary); color: white; font-weight: 500; }
+        tr:last-child td { border-bottom: none; }
+    </style>
+</head>
+<body>
+
+
+<header>
+    <div class="brand">⚗️ Chen & Chang Chem Lab</div>
+    <div class="nav-links">
+        <div class="nav-btn active" onclick="goToSlide(0)">探究中心</div>
+        <div class="nav-btn" onclick="goToSlide(1)">茶樹檔案</div>
+        <div class="nav-btn" onclick="goToSlide(2)">化學結構</div>
+        <div class="nav-btn" onclick="goToSlide(3)">萃取原理</div>
+        <div class="nav-btn" onclick="goToSlide(4)">萃取步驟</div>
+        <div class="nav-btn" onclick="goToSlide(5)">熱縮原理</div>
+        <div class="nav-btn" onclick="goToSlide(6)">熱縮步驟</div>
+        <div class="nav-btn" onclick="goToSlide(7)">精油乾洗手</div>
+        <div class="nav-btn" onclick="goToSlide(8)">文獻下載</div>
+    </div>
+</header>
+
+
+<main>
+
+
+    <div class="slide active" id="slide-0">
+        <div style="text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 10px;">🔬🧬⚗️</div>
+            <h1>高分子與天然植萃工作坊</h1>
+            <span class="eng-sub">Polymer Science & Natural Extraction Workshop</span>
+            
+            <p><strong>歡迎來到科學探索中心 (Science Hub)！</strong><br>
+            今日課程將帶領各位進行天然物搜查，並深入高分子科學領域。<br>
+            讓我們以嚴謹的態度，探索物質的奧秘。</p>
+
+
+            <div class="highlight-box" style="text-align: left;">
+                <strong>📅 實驗進程 (Mission Agenda):</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>茶樹大搜查 (Tea Tree Investigation):</strong> 活性成份分析</li>
+                    <li><strong>萃取實驗室 (Extraction Lab):</strong> 蒸餾分離技術</li>
+                    <li><strong>創意熱縮片 (Creative Shrink Plastic):</strong> 熱塑性材料特性</li>
+                    <li><strong>精油乾洗手 (Hand Sanitizer):</strong> 抑菌配方設計</li>
+                </ul>
+            </div>
+        </div>
+        <div class="nav-actions" style="justify-content: flex-end;">
+            <button class="btn-next" onclick="nextSlide()">開始探索 (Start) ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-1">
+        <h2>茶樹大搜查：植物檔案</h2>
+        <span class="eng-sub">Tea Tree Investigation: Botanical Profile</span>
+        
+        <div class="no-img-box">
+            <h3>🌿 Melaleuca alternifolia</h3>
+            <p>(此處展示茶樹特徵：針狀葉片與白色花穗)</p>
+        </div>
+
+
+        <p><strong>學名:</strong> <em>Melaleuca alternifolia</em><br>
+        <strong>產地:</strong> 澳洲新南威爾斯 (New South Wales)。</p>
+        <p>本單元的主角是桃金孃科植物。其枝葉富含揮發性油脂，具備特殊的生物活性，是天然抑菌劑的重要來源。</p>
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 探索中心</button>
+            <button class="btn-next" onclick="nextSlide()">化學結構 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-2">
+        <h2>茶樹大搜查：化學結構</h2>
+        <span class="eng-sub">Chemical Structure & Bioactivity</span>
+        
+        <h3>🧪 關鍵分子：Terpinen-4-ol</h3>
+        <div class="highlight-box" style="text-align: center; font-family: monospace; font-size: 1.1rem;">
+            [C10H18O]<br>
+            單環單萜醇<br>
+            (Monoterpene alcohol)
+        </div>
+
+
+        <h3>🛡️ 生物活性機制 (Mechanism)</h3>
+        <ul>
+            <li><strong>廣譜抗菌 (Antibacterial)</strong>：破壞細菌細胞膜。</li>
+            <li><strong>抗黴菌 (Antifungal)</strong>：抑制真菌生長。</li>
+            <li><strong>抗發炎 (Anti-inflammatory)</strong>：調節發炎介質。</li>
+            <li><strong>抗病毒 (Antiviral)</strong>：干擾病毒複製。</li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 植物檔案</button>
+            <button class="btn-next" onclick="nextSlide()">萃取實驗室 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-3">
+        <h2>萃取實驗室：分離原理</h2>
+        <span class="eng-sub">Extraction Lab: Principle</span>
+        <h3>⚗️ 蒸氣蒸餾 (Steam Distillation)</h3>
+        
+        <p>利用水蒸氣的滲透性來破壞植物細胞，使植物中的精油成分蒸發出來，冷凝後，成油水分離兩層狀。</p>
+        
+        <div class="highlight-box">
+            <strong>相分離 (Phase Separation):</strong><br>
+            冷凝後，混合液會因<strong>密度 (Density)</strong> 與極性差異而分層：
+            <ul>
+                <li>上層：疏水性精油 (Essential Oil)</li>
+                <li>下層：親水性純露 (Hydrosol)</li>
+            </ul>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 化學結構</button>
+            <button class="btn-next" onclick="nextSlide()">實驗步驟 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-4">
+        <h2>萃取實驗室：操作流程</h2>
+        <span class="eng-sub">Experimental Procedure</span>
+        <ol style="line-height: 2; list-style-type: decimal;">
+            <li><strong>裝填 (Loading):</strong> 投入植材。</li>
+            <li><strong>加熱 (Heating):</strong> 熱源驅動相變產生蒸氣。</li>
+            <li><strong>冷凝 (Condensation):</strong> 氣態轉液態。</li>
+            <li><strong>收集 (Collection):</strong> 觀察分層現象。</li>
+        </ol>
+        <div class="highlight-box">
+            ⏳ <strong>實驗空檔：</strong><br>
+            在等待萃取平衡的同時，我們將進行「創意熱縮片」實驗。
+        </div>
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 分離原理</button>
+            <button class="btn-next" onclick="nextSlide()">創意熱縮片 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-5">
+        <h2>創意熱縮片：材料特性</h2>
+        <span class="eng-sub">Creative Shrink Plastic: Properties</span>
+        
+        <p>實驗材料：<strong>聚苯乙烯 (Polystyrene, PS)</strong></p>
+        <div class="highlight-box">
+            <strong>科學關鍵字 (Keywords):</strong>
+            <ul>
+                <li><strong>Polymer (高分子)</strong></li>
+                <li><strong>Shrinkage (熱收縮)</strong></li>
+            </ul>
+        </div>
+        <p><strong>熱性質原理：</strong>PS 片在製造時經過雙軸延伸（拉伸）。當加熱超過其玻璃轉移溫度 (Tg) 時，分子鏈解凍並試圖回復到原本捲曲的亂度較大狀態，導致體積收縮。</p>
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 萃取步驟</button>
+            <button class="btn-next" onclick="nextSlide()">製作流程 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-6">
+        <h2>創意熱縮片：製作流程</h2>
+        <span class="eng-sub">Fabrication Process</span>
+
+
+        <ol style="list-style-type: decimal;">
+            <li><strong>構圖 (Design)</strong>: 在粗糙面繪製。</li>
+            <li><strong>剪裁 (Cut)</strong>: 修整邊緣。</li>
+            <li><strong>打洞 (Punch)</strong>: 預留孔洞。</li>
+            <li><strong>熱處理 (Heat Treatment)</strong>: 150°C 加熱收縮。</li>
+            <li><strong>後處理 (Post-processing)</strong>: UV 膠固化保護。</li>
+        </ol>
+
+
+        <div style="text-align: center; margin: 25px 0;">
+            <a href="https://youtu.be/jtjQKwS2AgE" target="_blank" class="action-btn btn-yt">
+                ▶️ 觀看實驗教學影片 (Watch Video)
+            </a>
+        </div>
+
+
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 材料特性</button>
+            <button class="btn-next" onclick="nextSlide()">精油乾洗手 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-7">
+        <h2>精油乾洗手：配方調製</h2>
+        <span class="eng-sub">Essential Oil Hand Sanitizer: Formulation</span>
+        <p>利用高分子凝膠 (Polymer Gel) 與天然萃取物，建立凝膠網狀結構，製作具備抑菌功能的凝露。</p>
+        
+        <h3>⚗️ 標準配方 (Standard Formula)</h3>
+        <table>
+            <tr><th>成分 (Ingredients)</th><th>用量</th></tr>
+            <tr><td>乙醇 (Ethanol 75%)</td><td>75 mL</td></tr>
+            <tr><td>茶樹純露 (Hydrosol)</td><td>15 g</td></tr>
+            <tr><td>蘆薈萃取液 (Aloe Extract)</td><td>2 g</td></tr>
+            <tr><td>茶樹精油 (Essential Oil)</td><td>5 滴</td></tr>
+        </table>
+        
+        <div class="highlight-box">
+            <strong>操作步驟：</strong><br>
+            將所有成分加入容器中，充分混合均勻，觀察高分子鏈與溶劑作用形成的凝膠態。
+        </div>
+
+
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 製作流程</button>
+            <button class="btn-next" onclick="nextSlide()">文獻與下載 ➡️</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide-8">
+        <h2>文獻與下載</h2>
+        <span class="eng-sub">References & Downloads</span>
+        
+        <div style="margin: 20px 0; padding: 20px; background-color: #e0f2f1; border-radius: 8px; border: 1px dashed #006064; text-align: center;">
+            <h3>📂 課程學習單</h3>
+            <p style="margin-bottom: 15px;">請點擊下方按鈕，開啟並下載 Google 文件。</p>
+            <a href="https://docs.google.com/document/d/1PNS88hWaDpXPmf1bLLI6YiVeiW56cE6mdrkQs22uyXY/edit?usp=sharing" target="_blank" class="action-btn btn-download">
+                🔗 開啟學習歷程檔案 (Open Portfolio)
+            </a>
+        </div>
+
+
+        <h3>📚 參考文獻 (References)</h3>
+        <ul>
+            <li>Carson, C. F. et al. (2006). <em>Melaleuca alternifolia</em> (Tea Tree) oil: a review of antimicrobial and other medicinal properties.</li>
+            <li>Wikipedia: Terpinen-4-ol Chemical Structure.</li>
+            <li>CDC Disinfection Guidelines.</li>
+        </ul>
+
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: #aaa;">
+            © 2025 Chen & Chang Chem Lab
+        </div>
+
+
+        <div class="nav-actions">
+            <button class="btn-prev" onclick="prevSlide()">⬅️ 配方調製</button>
+            <button class="btn-next" style="background-color: #607d8b;" onclick="goToSlide(0)">🔄 返回首頁</button>
+        </div>
+    </div>
+
+
+</main>
+
+
+<footer>
+    <p>© 2025 <strong>Chen & Chang Chem Lab</strong>.</p>
+</footer>
+
+
+<script>
+    let currentSlide = 0;
+    const totalSlides = 9;
+
+
+    function showSlide(index) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(d => d.classList.remove('active'));
+        
+        document.getElementById('slide-' + index).classList.add('active');
+        // 確保 nav-btn 存在才操作
+        const navBtns = document.querySelectorAll('.nav-btn');
+        if(navBtns[index]) navBtns[index].classList.add('active');
+        
+        currentSlide = index;
+        document.getElementById('slide-' + index).scrollTop = 0;
+    }
+
+
+    function nextSlide() { if (currentSlide < totalSlides - 1) showSlide(currentSlide + 1); }
+    function prevSlide() { if (currentSlide > 0) showSlide(currentSlide - 1); }
+    function goToSlide(index) { showSlide(index); }
+</script>
+
+
+</body>
+</html>
